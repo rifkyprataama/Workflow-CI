@@ -1,0 +1,64 @@
+name: CI Training & MLflow Docker Build
+
+on:
+  push:
+    paths:
+      - 'MLProject/**'
+  workflow_dispatch: # Memungkinkan Anda menjalankan workflow secara manual dari tombol di GitHub
+
+jobs:
+  train-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 1. Setup Environment Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # 2. Instalasi MLflow
+      - name: Install MLflow & dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mlflow==2.19.0 pandas scikit-learn
+
+      # 3. Menjalankan MLProject (Pelatihan Model)
+      - name: Run MLflow Project
+        run: |
+          cd MLProject
+          mlflow run . --no-conda
+          
+      # 4. Upload Artefak ke GitHub (Syarat Skilled & Advance)
+      - name: Upload MLruns Artifacts to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: MLProject/mlruns/
+          retention-days: 5
+
+      # 5. Login ke Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 6. Build Docker Image Menggunakan MLflow
+      - name: Build Docker Image from MLflow Model
+        run: |
+          cd MLProject
+          # Membaca ID dari run_id.txt yang dihasilkan oleh modelling.py
+          RUN_ID=$(cat run_id.txt)
+          
+          # Membangun docker image. GANTI 'NAMA_USERNAME_DOCKER_ANDA' DI BAWAH INI:
+          mlflow models build-docker -m "mlruns/0/$RUN_ID/artifacts/model" -n "NAMA_USERNAME_DOCKER_ANDA/gojek-sentiment-model:latest"
+
+      # 7. Push Docker Image ke Docker Hub
+      - name: Push Docker Image to Docker Hub
+        run: |
+          # GANTI JUGA 'NAMA_USERNAME_DOCKER_ANDA' DI BAWAH INI:
+          docker push rifkyprataama/gojek-sentiment-model:latest
