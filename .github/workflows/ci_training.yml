@@ -2,9 +2,9 @@ name: CI Training & MLflow Docker Build
 
 on:
   push:
-    paths:
-      - 'MLProject/**'
-  workflow_dispatch: # Memungkinkan Anda menjalankan workflow secara manual dari tombol di GitHub
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   train-and-deploy:
