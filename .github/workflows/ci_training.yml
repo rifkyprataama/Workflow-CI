@@ -47,13 +47,15 @@ jobs:
       - name: Build Docker Image
         env:
           MLFLOW_ALLOW_FILE_STORE: "true"
+          # Memberi tahu MLflow di mana database mlruns berada
+          MLFLOW_TRACKING_URI: "file:./mlruns"
         run: |
           cd MLProject
-          # BACA LANGSUNG DARI FILE (Pasti terbaca akurat!)
           RUN_ID=$(cat run_id.txt)
           echo "Membangun Docker dengan Run ID: $RUN_ID"
           
-          mlflow models build-docker -m "mlruns/0/$RUN_ID/artifacts/model" -n "rifkyprataama/gojek-sentiment-model:latest"
+          # MENGGUNAKAN URI RESMI "runs:/" AGAR MLFLOW MENCARI SENDIRI LOKASI MODELNYA
+          mlflow models build-docker -m "runs:/$RUN_ID/model" -n "rifkyprataama/gojek-sentiment-model:latest"
 
       - name: Push Docker Image to Docker Hub
         run: |
