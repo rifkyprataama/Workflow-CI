@@ -51,12 +51,16 @@ jobs:
 
       # 6. Build Docker Image Menggunakan MLflow
       - name: Build Docker Image from MLflow Model
+        env:
+          MLFLOW_ALLOW_FILE_STORE: "true"
         run: |
           cd MLProject
-          # Membaca ID dari run_id.txt yang dihasilkan oleh modelling.py
-          RUN_ID=$(cat run_id.txt)
           
-          # Membangun docker image dengan username asli
+          # Trik cerdas: Mengambil ID Folder secara otomatis (mengabaikan meta.yaml)
+          RUN_ID=$(ls mlruns/0 | grep -v meta.yaml | head -n 1)
+          echo "Membangun Docker dengan Run ID yang benar: $RUN_ID"
+          
+          # Membangun docker image
           mlflow models build-docker -m "mlruns/0/$RUN_ID/artifacts/model" -n "rifkyprataama/gojek-sentiment-model:latest"
 
       # 7. Push Docker Image ke Docker Hub
