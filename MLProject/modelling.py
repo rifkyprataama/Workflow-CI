@@ -6,6 +6,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 
+# Kunci lokasi mlruns secara eksplisit
+mlflow.set_tracking_uri("file:./mlruns")
+
 print("Memuat dataset...")
 df = pd.read_csv("namadataset_preprocessing/dataset_clean.csv")
 df = df.dropna(subset=['ulasan_bersih']).reset_index(drop=True)
@@ -29,5 +32,9 @@ with mlflow.start_run() as run:
 
     # Mencatat model
     mlflow.sklearn.log_model(pipeline, "model")
+    
+    # CARA PALING ANTI GAGAL: Simpan ID ke file .txt
+    with open("run_id.txt", "w") as f:
+        f.write(run.info.run_id)
 
-print("Selesai!")
+print("Selesai! Run ID berhasil disimpan ke run_id.txt.")

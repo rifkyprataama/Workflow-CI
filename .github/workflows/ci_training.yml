@@ -24,7 +24,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install mlflow pandas scikit-learn
 
-      # KUNCI UTAMA: Jalankan script python secara langsung agar file tidak dihapus oleh sistem sementara (temp dir)
       - name: Run Model Training
         env:
           MLFLOW_ALLOW_FILE_STORE: "true"
@@ -50,10 +49,10 @@ jobs:
           MLFLOW_ALLOW_FILE_STORE: "true"
         run: |
           cd MLProject
-          RUN_ID=$(ls mlruns/0 | grep -E '^[0-9a-f]{32}$' | head -n 1)
+          # BACA LANGSUNG DARI FILE (Pasti terbaca akurat!)
+          RUN_ID=$(cat run_id.txt)
           echo "Membangun Docker dengan Run ID: $RUN_ID"
           
-          # Proses build pasti berhasil karena folder model sekarang permanen
           mlflow models build-docker -m "mlruns/0/$RUN_ID/artifacts/model" -n "rifkyprataama/gojek-sentiment-model:latest"
 
       - name: Push Docker Image to Docker Hub
