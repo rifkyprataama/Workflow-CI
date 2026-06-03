@@ -1,0 +1,4 @@
+1. Tautan Repositori GitHub: (https://github.com/rifkyprataama/Workflow-CI.git)
+2. Tautan Docker Hub: (https://hub.docker.com/repository/docker/rifkyprataama/gojek-sentiment-model)
+
+alur CI/CD berjalan sukses dan tangkapan layar buktinya ada di dalam repositori GitHub tersebut. (sudah mengunggah ci_berhasil.jpg dan dockerhub_pushed.jpg ke repositori GitHub).
