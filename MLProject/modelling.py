@@ -9,7 +9,7 @@ from sklearn.pipeline import make_pipeline
 
 # Konfigurasi MLflow Lokal (Action akan menjalankannya di server GitHub)
 mlflow.set_tracking_uri("file:./mlruns")
-mlflow.set_experiment("CI_Training")
+# mlflow.set_experiment("CI_Training")
 
 print("Memuat dataset...")
 # Path disesuaikan karena dieksekusi dari dalam folder MLProject
