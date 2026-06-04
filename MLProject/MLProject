@@ -2,4 +2,4 @@ name: Gojek_Sentiment_Model
 
 entry_points:
   main:
-    command: "python Membangun_model/modelling_tuning.py"
+    command: "python modelling.py"
