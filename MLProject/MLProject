@@ -1,7 +1,5 @@
-name: Gojek_Sentiment_Pipeline
-
-conda_env: conda.yaml
+name: Gojek_Sentiment_Model
 
 entry_points:
   main:
-    command: "python modelling.py"
+    command: "python Membangun_model/modelling_tuning.py"
