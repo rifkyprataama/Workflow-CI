@@ -6,8 +6,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 
-# Kunci lokasi mlruns secara eksplisit
-mlflow.set_tracking_uri("file:./mlruns")
+# [DIHAPUS/DINONAKTIFKAN] Biarkan GitHub Actions yang mengatur tracking URI-nya
+# mlflow.set_tracking_uri("file:./mlruns") 
 
 print("Memuat dataset...")
 df = pd.read_csv("namadataset_preprocessing/dataset_clean.csv")
@@ -25,6 +25,7 @@ pipeline = make_pipeline(
 )
 
 print("Melatih model...")
+# MLflow akan otomatis menggunakan run yang dibuat oleh perintah `mlflow run` di YAML
 with mlflow.start_run() as run:
     pipeline.fit(X_train, y_train)
     score = pipeline.score(X_test, y_test)

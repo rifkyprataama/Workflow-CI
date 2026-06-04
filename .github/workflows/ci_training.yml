@@ -27,6 +27,7 @@ jobs:
       - name: Run Model Training
         env:
           MLFLOW_ALLOW_FILE_STORE: "true"
+          MLFLOW_TRACKING_URI: "file:./mlruns"  # <-- Tambahkan baris ini!
         run: |
           cd MLProject
           mlflow run . --env-manager=local
